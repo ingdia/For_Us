@@ -26,6 +26,32 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const getDepartmentFromEmail = (email) => {
+    const emailLower = email.toLowerCase()
+
+    // Check for department keywords in email
+    if (emailLower.includes("sanitation") || emailLower.includes("isuku")) {
+      return "Sanitation"
+    } else if (emailLower.includes("police") || emailLower.includes("polisi")) {
+      return "Police"
+    } else if (
+      emailLower.includes("electricity") ||
+      emailLower.includes("amashanyarazi") ||
+      emailLower.includes("power")
+    ) {
+      return "Electricity"
+    } else if (emailLower.includes("roads") || emailLower.includes("imihanda") || emailLower.includes("road")) {
+      return "Roads"
+    } else if (emailLower.includes("water") || emailLower.includes("amazi")) {
+      return "Water"
+    } else if (emailLower.includes("department") || emailLower.includes("dept")) {
+      // Generic department - could be assigned to any
+      return "General"
+    }
+
+    return null
+  }
+
   const login = async (email, password) => {
     try {
       // Check if user exists
@@ -65,12 +91,16 @@ export const AuthProvider = ({ children }) => {
         return false
       }
 
-      // Determine role based on email
+      // Determine role and department based on email
       let userRole = role
+      let userDepartment = null
+
       if (email.toLowerCase().includes("admin")) {
         userRole = "superAdmin"
-      } else if (email.toLowerCase().includes("staff") || email.toLowerCase().includes("department")) {
+        userDepartment = "Administration"
+      } else if (email.toLowerCase().includes("staff") || getDepartmentFromEmail(email)) {
         userRole = "staff"
+        userDepartment = getDepartmentFromEmail(email) || "General"
       }
 
       const newUser = {
@@ -79,6 +109,7 @@ export const AuthProvider = ({ children }) => {
         password,
         name,
         role: userRole,
+        department: userDepartment,
         createdAt: new Date().toISOString(),
       }
 
@@ -90,6 +121,7 @@ export const AuthProvider = ({ children }) => {
         email: newUser.email,
         name: newUser.name,
         role: newUser.role,
+        department: newUser.department,
       }
 
       setUser(userData)

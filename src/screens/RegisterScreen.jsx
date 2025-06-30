@@ -25,6 +25,65 @@ const RegisterScreen = ({ navigation }) => {
     changeLanguage(newLanguage)
   }
 
+  const getDepartmentFromEmail = (email) => {
+    const emailLower = email.toLowerCase()
+
+    if (emailLower.includes("sanitation") || emailLower.includes("isuku")) {
+      return "Sanitation"
+    } else if (emailLower.includes("police") || emailLower.includes("polisi")) {
+      return "Police"
+    } else if (
+      emailLower.includes("electricity") ||
+      emailLower.includes("amashanyarazi") ||
+      emailLower.includes("power")
+    ) {
+      return "Electricity"
+    } else if (emailLower.includes("roads") || emailLower.includes("imihanda") || emailLower.includes("road")) {
+      return "Roads"
+    } else if (emailLower.includes("water") || emailLower.includes("amazi")) {
+      return "Water"
+    }
+
+    return null
+  }
+
+  const getAccountTypePreview = () => {
+    if (!email) return null
+
+    const emailLower = email.toLowerCase()
+    const department = getDepartmentFromEmail(email)
+
+    if (emailLower.includes("admin")) {
+      return {
+        type: "Super Admin",
+        description: "Full system access and management",
+        icon: "shield-checkmark",
+        color: "#9c27b0",
+      }
+    } else if (department) {
+      return {
+        type: `${department} Staff`,
+        description: `Manage ${department.toLowerCase()} department reports`,
+        icon: "person-add",
+        color: "#2196f3",
+      }
+    } else if (emailLower.includes("staff") || emailLower.includes("department")) {
+      return {
+        type: "General Staff",
+        description: "Department staff access",
+        icon: "person-add",
+        color: "#2196f3",
+      }
+    } else {
+      return {
+        type: "Citizen",
+        description: "Create and track reports",
+        icon: "person",
+        color: "#4caf50",
+      }
+    }
+  }
+
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
       showError(t("missingInfo"), t("fillAllFields"))
@@ -54,7 +113,7 @@ const RegisterScreen = ({ navigation }) => {
       setTimeout(() => {
         if (email.toLowerCase().includes("admin")) {
           navigation.replace("SuperAdminDashboard")
-        } else if (email.toLowerCase().includes("staff") || email.toLowerCase().includes("department")) {
+        } else if (getDepartmentFromEmail(email) || email.toLowerCase().includes("staff")) {
           navigation.replace("StaffDashboard")
         } else {
           navigation.replace("UserDashboard")
@@ -64,6 +123,8 @@ const RegisterScreen = ({ navigation }) => {
       showError(t("registrationFailed"), t("emailAlreadyExists"))
     }
   }
+
+  const accountPreview = getAccountTypePreview()
 
   const styles = StyleSheet.create({
     container: {
@@ -171,8 +232,54 @@ const RegisterScreen = ({ navigation }) => {
       color: colors.textSecondary,
       lineHeight: 16,
     },
+    accountPreview: {
+      backgroundColor: colors.surface,
+      padding: 15,
+      borderRadius: 10,
+      marginBottom: 20,
+      borderLeftWidth: 4,
+    },
+    previewHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 5,
+    },
+    previewTitle: {
+      fontSize: 14,
+      fontWeight: "bold",
+      color: colors.text,
+      marginLeft: 10,
+    },
+    previewDescription: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginLeft: 34,
+    },
     disabledButton: {
       opacity: 0.6,
+    },
+    departmentExamples: {
+      backgroundColor: colors.surface,
+      padding: 15,
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+    exampleTitle: {
+      fontSize: 14,
+      fontWeight: "bold",
+      color: colors.text,
+      marginBottom: 10,
+    },
+    exampleItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    exampleText: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginLeft: 10,
+      flex: 1,
     },
   })
 
@@ -189,8 +296,7 @@ const RegisterScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-    
-
+   
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{t("fullName")}</Text>
         <TextInput
@@ -214,6 +320,16 @@ const RegisterScreen = ({ navigation }) => {
           autoCapitalize="none"
         />
       </View>
+
+      {/* {accountPreview && (
+        <View style={[styles.accountPreview, { borderLeftColor: accountPreview.color }]}>
+          <View style={styles.previewHeader}>
+            <Ionicons name={accountPreview.icon} size={20} color={accountPreview.color} />
+            <Text style={styles.previewTitle}>Account Type: {accountPreview.type}</Text>
+          </View>
+          <Text style={styles.previewDescription}>{accountPreview.description}</Text>
+        </View>
+      )} */}
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{t("password")}</Text>
