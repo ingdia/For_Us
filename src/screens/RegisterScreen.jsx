@@ -189,10 +189,7 @@ const RegisterScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.roleHint}>
-        <Text style={styles.roleHintTitle}>{t("accountTypes")}</Text>
-        <Text style={styles.roleHintText}>{t("accountTypesDesc")}</Text>
-      </View>
+    
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{t("fullName")}</Text>

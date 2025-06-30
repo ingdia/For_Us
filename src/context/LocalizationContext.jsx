@@ -55,7 +55,7 @@ export const useLocalization = () => {
 const translations = {
   en: {
     // Welcome Screen
-    appTitle: "Citizen Complaint App",
+    appTitle: "Citizen Complain App",
     appSubtitle: "Report issues, track progress, and help improve your community services",
     getStarted: "Get Started",
     alreadyHaveAccount: "Already have an account? Login",
@@ -474,8 +474,8 @@ const translations = {
     info: "Amakuru",
 
     // Location & GPS
-    evidencePhoto: "📷 Ifoto y'ibimenyetso",
-    locationDetails: "📍 Amakuru y'aho biherereye",
+    evidencePhoto: "Ifoto y'ibimenyetso",
+    locationDetails: " Amakuru y'aho biherereye",
     gpsCoordinates: "GPS",
 
     // Theme
